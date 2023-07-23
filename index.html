@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>.butter</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖋️</text></svg>">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+        * {
+            font-family: 'Open Sans', sans-serif;
+        }
+        #container {
+            display: flex;
+            height: 100vh;
+        }
+        body {
+            margin: 0
+        }
+        #markdown, #preview {
+            flex: 1;
+            padding: 1em;
+            box-sizing: border-box;
+            overflow: auto;
+            border: 1px solid;
+        }
+        #markdown {
+            border-right: 1px solid #ddd;
+        }
+        /* Styles for the modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            overflow-wrap: break-word;
+        }
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover, .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        /* Styles for the "Post" button */
+        #postButton {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 1em;
+            width: 150px;
+            background: black;
+            color: white;
+            border: 0;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <textarea id="markdown" oninput="updatePreview()"></textarea>
+        <div id="preview"></div>
+    </div>
+    <!-- The "Post" button -->
+    <button id="postButton">Post</button>
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modalText">Your content has been posted.</p>
+        </div>
+    </div>
+    <script>
+        var converter = new showdown.Converter();
+
+        function updatePreview() {
+            var markdown = document.getElementById('markdown').value;
+            document.getElementById('preview').innerHTML = converter.makeHtml(markdown);
+        }
+
+        function base64Encode(str) {
+            return btoa(unescape(encodeURIComponent(str)));
+        }
+
+        window.onload = function() {
+            var sampleMarkdown = "# Hello, Bitcoin!\nThis is a sample post on Butter. Type on the left and see the preview on the right.";
+            document.getElementById('markdown').value = sampleMarkdown;
+            updatePreview();
+        }
+
+        // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("postButton");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal
+        btn.onclick = function() {
+            var markdown = document.getElementById('markdown').value;
+            document.getElementById('modalText').textContent = base64Encode(markdown);
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
